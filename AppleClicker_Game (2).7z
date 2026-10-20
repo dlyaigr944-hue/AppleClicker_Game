@@ -1,1 +1,176 @@
-index.html
+  <!DOCTYPE html>
+  <html lang="ru">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Супер Яблочный Кликер 🍎</title>
+      <style>
+          body {
+              background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+              margin: 0;
+              user-select: none;
+              overflow: hidden;
+          }
+
+          .game-container {
+              text-align: center;
+              background: white;
+              padding: 30px;
+              border-radius: 30px;
+              box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+              width: 350px;
+          }
+
+          h1 { color: #d32f2f; margin-bottom: 10px; }
+
+          .score-container {
+              font-size: 32px;
+              font-weight: bold;
+              margin-bottom: 20px;
+              color: #333;
+          }
+
+          /* Рисуем яблоко с помощью CSS */
+          .apple {
+              width: 150px;
+              height: 150px;
+              background: #ff4d4d;
+              border-radius: 50% 50% 45% 45%;
+              margin: 20px auto;
+              cursor: pointer;
+              position: relative;
+              transition: transform 0.1s active;
+              box-shadow: inset -10px -10px 20px rgba(0,0,0,0.2), 0 10px 20px rgba(0,0,0,0.1);
+          }
+
+          .apple::before { /* Хвостик яблока */
+              content: '';
+              position: absolute;
+              top: -15px;
+              left: 70px;
+              width: 10px;
+              height: 20px;
+              background: #6d4c41;
+              border-radius: 5px;
+          }
+
+          .apple::after { /* Листик */
+              content: '';
+              position: absolute;
+              top: -18px;
+              left: 80px;
+              width: 20px;
+              height: 15px;
+              background: #4caf50;
+              border-radius: 0 15px 0 15px;
+          }
+
+          .apple:active {
+              transform: scale(0.9);
+          }
+
+          .shop {
+              margin-top: 30px;
+              border-top: 2px solid #eee;
+              padding-top: 20px;
+          }
+
+          .upgrade-btn {
+              background: #ffc107;
+              border: none;
+              padding: 10px 20px;
+              font-size: 16px;
+              font-weight: bold;
+              border-radius: 10px;
+              cursor: pointer;
+              transition: 0.3s;
+              width: 100%;
+              box-shadow: 0 4px 0 #b8860b;
+          }
+
+          .upgrade-btn:hover { background: #ffca28; }
+          .upgrade-btn:active {
+              transform: translateY(2px);
+              box-shadow: 0 2px 0 #b8860b;
+          }
+
+          .upgrade-btn:disabled {
+              background: #ccc;
+              box-shadow: 0 4px 0 #999;
+              cursor: not-allowed;
+          }
+
+          .stats {
+              font-size: 14px;
+              color: #666;
+              margin-top: 10px;
+          }
+      </style>
+  </head>
+  <body>
+
+      <div class="game-container">
+          <h1>Яблоко Кликер</h1>
+          <div class="score-container">🍎 <span id="score">0</span></div>
+
+          <div class="apple" id="apple"></div>
+
+          <div class="shop">
+              <button class="upgrade-btn" id="buyAuto">Купить Авто-кликер (Цена: 15 🍎)</button>
+              <div class="stats">Яблок в сек: <span id="aps">0</span></div>
+          </div>
+      </div>
+
+      <script>
+          let score = 0;
+          let autoClickers = 0;
+          let autoClickerCost = 15;
+
+          const scoreElement = document.getElementById('score');
+          const appleElement = document.getElementById('apple');
+          const buyAutoBtn = document.getElementById('buyAuto');
+          const apsElement = document.getElementById('aps');
+
+          // Клик по яблоку
+          appleElement.addEventListener('click', () => {
+              score++;
+              updateDisplay();
+          });
+
+          // Покупка авто-кликера
+          buyAutoBtn.addEventListener('click', () => {
+              if (score >= autoClickerCost) {
+                  score -= autoClickerCost;
+                  autoClickers++;
+                  autoClickerCost = Math.floor(autoClickerCost * 1.5); // Цена растет
+                  updateDisplay();
+              }
+          });
+
+          // Работа авто-кликеров
+          setInterval(() => {
+              if (autoClickers > 0) {
+                  score += autoClickers;
+                  updateDisplay();
+              }
+          }, 1000);
+
+          function updateDisplay() {
+              scoreElement.innerText = score;
+              apsElement.innerText = autoClickers;
+              buyAutoBtn.innerText = `Купить Авто-кликер (Цена: ${autoClickerCost} 🍎)`;
+
+              // Кнопка становится серой, если не хватает денег
+              buyAutoBtn.disabled = (score < autoClickerCost);
+          }
+
+          updateDisplay();
+      </script>
+  </body>
+  </html>
